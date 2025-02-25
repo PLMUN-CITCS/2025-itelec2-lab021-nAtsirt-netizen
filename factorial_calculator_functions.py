@@ -2,29 +2,27 @@ import unittest, unittest.mock
 
 def get_int():
     while True:
-        try: n = int(input("Num: "))
-        except: print("Bad num.")
-        else:
+        try:
+            n = int(input("Enter non-negative int: "))
             if n >= 0: return n
-            print(">= 0 please.")
+            print("Invalid: non-negative.")
+        except ValueError: print("Invalid: integer.")
 
-def fact(n):
-    f = 1
-    for i in range(1, n + 1): f *= i
-    return f if n else 1
+def factorial(n):
+    return 1 if n == 0 else n * factorial(n - 1)
 
 def main():
     n = get_int()
-    print(f"Fact: {fact(n)}")
+    print(f"Factorial of {n} is: {factorial(n)}")
 
-class TestFact(unittest.TestCase):
-    def test_0(self): self.assertEqual(fact(0), 1)
-    def test_5(self): self.assertEqual(fact(5), 120)
-    def test_in(self):
+class TestFactorial(unittest.TestCase):
+    def test_zero(self): self.assertEqual(factorial(0), 1)
+    def test_positive(self): self.assertEqual(factorial(5), 120)
+    def test_input_valid(self):
         with unittest.mock.patch('builtins.input', return_value='3'): self.assertEqual(get_int(), 3)
-    def test_in_bad(self):
+    def test_input_invalid_text(self):
         with unittest.mock.patch('builtins.input', side_effect=['a', '4']): self.assertEqual(get_int(), 4)
-    def test_in_neg(self):
+    def test_input_invalid_negative(self):
         with unittest.mock.patch('builtins.input', side_effect=['-1', '5']): self.assertEqual(get_int(), 5)
 
 if __name__ == "__main__":
