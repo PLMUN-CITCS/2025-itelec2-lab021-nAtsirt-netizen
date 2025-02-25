@@ -1,28 +1,32 @@
-def get_non_negative_integer():
 
+
+def get_int():
     while True:
-        try:
-            number = int(input("Enter a non-negative integer: "))
-            if number >= 0:
-                return number
-            print("Invalid input. Please enter a non-negative integer.")
-        except ValueError:
-            print("Invalid input. Please enter a valid integer.")
+        try: n = int(input("Num: "))
+        except: print("Bad num.")
+        else:
+            if n >= 0: return n
+            print(">= 0 please.")
 
-def calculate_factorial(n):
-
-    if n == 0:
-        return 1
-    factorial = 1
-    for i in range(1, n + 1):
-        factorial *= i
-    return factorial
+def fact(n):
+    f = 1
+    for i in range(1, n + 1): f *= i
+    return f if n else 1
 
 def main():
+    n = get_int()
+    print(f"Fact: {fact(n)}")
 
-    number = get_non_negative_integer()
-    result = calculate_factorial(number)
-    print(f"The factorial of {number} is: {result}")
+class TestFact(unittest.TestCase):
+    def test_0(self): self.assertEqual(fact(0), 1)
+    def test_5(self): self.assertEqual(fact(5), 120)
+    def test_in(self):
+        with unittest.mock.patch('builtins.input', return_value='3'): self.assertEqual(get_int(), 3)
+    def test_in_bad(self):
+        with unittest.mock.patch('builtins.input', side_effect=['a', '4']): self.assertEqual(get_int(), 4)
+    def test_in_neg(self):
+        with unittest.mock.patch('builtins.input', side_effect=['-1', '5']): self.assertEqual(get_int(), 5)
 
-if _name_ == "_main_":
+if __name__ == "__main__":
+    unittest.main(argv=['ignored'], exit=False)
     main()
